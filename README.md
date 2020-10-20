@@ -1,8 +1,5 @@
 # Ciceron
 
-Сервис переводов для интеграции "сбоку".
-Подробная информация: https://confluence.vsemayki.pro/pages/viewpage.action?pageId=34246835
-
 ## Installation (DEV, Non-Docker)
 ```bash
 apt-get update
