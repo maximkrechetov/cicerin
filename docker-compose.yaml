@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    command: ["gunicorn", "-b", "0.0.0.0:8080", "-w", "1", "ciceron.http:app", '--timeout', '0', '--graceful-timeout', '5', '--access-logfile', '-', '--error-logfile', '-']
+    restart: 'no'
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      VIRTUAL_HOST: ciceron.test
+      DEBUG: 'true'
+      FLASK_DEBUG: 'true'
+      FLASK_ENVIRONMENT: 'development'
+      CICERON_DB_DRIVER: mongo
+      CICERON_DB_HOST: ciceron_db_1
+      CICERON_DB_PORT: 27017
+      CICERON_DB_USERNAME: root
+      CICERON_DB_PASSWORD: rootpass
+      CICERON_DB_NAME: ciceron
+      CICERON_AUTH_SOURCE: admin
+      CICERON_MONGO_REPLICASET:
+      YANDEX_HOST: https://translate.api.cloud.yandex.net/translate/v2
+      YANDEX_CATALOG_ID: ''
+      YANDEX_KEY: ''
+      YANDEX_API_KEY: ''
+    networks:
+      - local
+      - dev
+
+  db:
+    image: mongo:3.6-stretch
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - local
+
+networks:
+  local:
+  dev:
+    external:
+      name: dev-services
+
+volumes:
+  mongo_data:

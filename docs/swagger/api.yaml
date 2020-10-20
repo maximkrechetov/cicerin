@@ -1,0 +1,267 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Ciceron API"
+  description: "Сервис переводов"
+tags:
+  - name: language_rest_api
+    description: Получение информации о языке
+  - name: translation_rest_api
+    description: Получение информации о переводах
+  - name: translate
+    description: Переводы с фоллбэками на translate API
+paths:
+  /api/language:
+    get:
+      summary: Получение данных о языке
+      description: ""
+      tags:
+        - language_rest_api
+      parameters:
+        - in: query
+          name: id
+          description: Идентификатор языка
+          schema:
+            type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        404:
+          description: По запросу данных не найдено
+    post:
+      summary:
+      description: Добавление нового языка
+      tags:
+        - language_rest_api
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            description: Данные о языке
+            properties:
+              alias:
+                type: string
+              label:
+                type: string
+              parent:
+                type: string
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        409:
+          description: Язык с такими данными уже существует
+    put:
+      summary:
+      description: Редактирование информации о языке
+      tags:
+        - language_rest_api
+      parameters:
+        - in: path
+          name: id
+          description: id языка
+          type: string
+        - in: body
+          name: body
+          schema:
+            type: object
+            description: Данные о языке
+            properties:
+              alias:
+                type: string
+              label:
+                type: string
+              parent:
+                type: string
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        409:
+          description: Язык с такими данными уже существует
+    delete:
+      summary:
+      description: Удаление информации о языке
+      tags:
+        - language_rest_api
+      parameters:
+        - in: path
+          name: id
+          description: id языка
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        404:
+          description: По запросу данных не найдено
+  /api/translation:
+    get:
+      summary: Получение данных о переводах
+      description: ""
+      tags:
+        - translation_rest_api
+      parameters:
+        - in: query
+          name: id
+          description: Идентификатор переводов
+          schema:
+            type: string
+        - in: query
+          name: language
+          description: Алиас языка
+          schema:
+            type: string
+        - in: query
+          name: object_key
+          description: Ключ перевода
+          schema:
+            type: string
+        - in: query
+          name: status
+          description: Статус перевода
+          schema:
+            type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        404:
+          description: По запросу данных не найдено
+    post:
+      summary:
+      description: Добавление новых переводов через API
+      tags:
+        - translation_rest_api
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            description: Данные о переводе
+            properties:
+              lang:
+                type: string
+                description: Алиас языка
+              objects:
+                type: object
+                description: Данные об объектах перевода
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        500:
+          description: Ошибка сервера
+    put:
+      summary:
+      description: Редактирование переводов
+      tags:
+        - translation_rest_api
+      parameters:
+        - in: path
+          name: id
+          description: id перевода
+        - in: body
+          name: body
+          schema:
+            type: object
+            description: Данные о переводе
+            properties:
+              lang:
+                type: string
+                description: Алиас языка
+              object_key:
+                type: string
+                description: Ключ перевода
+              object_data:
+                type: object
+                description: Словарь данных с переводами конкретных сущностей
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        500:
+          description: Ошибка сервера
+    delete:
+      summary:
+      description: Удаление информации о переводах
+      tags:
+        - translation_rest_api
+      parameters:
+        - in: path
+          name: id
+          description: id переводов
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        404:
+          description: По запросу данных не найдено
+  /translate:
+    post:
+      summary:
+      description: Получение/Добавление новых переводов
+      tags:
+        - translate
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            description: Данные о переводе
+            properties:
+              lang:
+                type: string
+                description: Алиас языка
+              objects:
+                type: object
+                description: Данные об объектах перевода
+              force:
+                type: boolean
+                description: Полностью ли заменить имеющиеся переводы для сущности
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Полученные данные
+        400:
+          description: Некорректные параметры запроса
+        500:
+          description: Ошибка сервера
